@@ -1,10 +1,10 @@
 # JurisprudenceAtlas
 
-《法理学》课程地图 —— 把课程大纲从一篇长文还原为一张可检索、可筛选的索引页。
+《法理学》课程地图与文献库 —— 把课程大纲从一篇长文还原为可检索、可筛选的索引页。
 
 - **站点地址**：<https://acagpt.github.io/JurisprudenceAtlas/>
 - **数据来源**：<https://github.com/acaGPT/Jurisprudence.wiki>
-- **当前版本**：v0.1.2
+- **当前版本**：v0.2.0
 
 ## 这个站点做什么
 
@@ -12,15 +12,25 @@
 想知道「第四单元有哪几章」「哪几章已经有了课前概览」「哪一章讨论哈特与富勒之争」，
 都只能在长文里翻。
 
-本站把大纲解析为结构化数据，提供三件事：
+本站把大纲解析为结构化数据，提供两页：
+
+**课程地图（`index.html`）**
 
 1. **单元分组浏览**——九个单元各自成区，章卡并列，可一屏看尽一个单元；
 2. **跨字段检索**——在章号、中英题名、中英梗概五个字段上做即时过滤；
 3. **撰写进度可视**——每章标注课前概览是「已有」还是「待撰写」，并可据此筛选。
 
+**文献库（`references.html`）**
+
+1. **逐条检索**——在作者、题名、年份、渠道上做即时过滤，中英文皆可；
+2. **按获取方式筛选**——粗分「全文直读 / 需定位或订阅」，细分至
+   Open Library、doi.org、SEP、HeinOnline 等具体渠道；
+3. **三种排序**——按课程结构（默认）、按作者、按年份；
+4. **导出书目**——一键导出全部条目的 BibTeX 或 RIS（固定全量，不随筛选变化）。
+
 ## 内容边界
 
-本站**不复制正文**。章节梗概、文献数目、课前概览链接均取自大纲原文，
+本站**不复制正文**。章节梗概、文献条目、课前概览链接均取自大纲原文，
 阅读入口一律指向课程 Wiki。正文与文献的增删改，只在 Wiki 一处发生；
 本站的数据层由脚本从 Wiki 重新生成，不手工维护第二份内容。
 
@@ -33,25 +43,31 @@
 ├── .github/workflows/
 │   └── sync-wiki.yml          # 每日轮询 Wiki，落后则抽取并直推 gh-pages
 ├── tools/
-│   ├── extract-syllabus.py    # 从 Wiki 大纲抽取数据层
+│   ├── extract-syllabus.py    # 从 Wiki 大纲抽取课程地图数据层
+│   ├── extract-references.py  # 从 Wiki 大纲抽取文献库数据层
 │   ├── check-sync.py          # 三级比对：Wiki → 数据层 → 线上 Pages
-│   └── bump-version.py        # 递增 README 版本号，供自动发版取号
+│   ├── bump-version.py        # 递增 README 版本号，供自动发版取号
+│   └── qa-references.js       # 文献库断言式 QA（playwright + Chrome）
 ├── site/                      # 站点源（发布到 gh-pages 分支）
 │   ├── index.html              # 课程地图
+│   ├── references.html         # 文献库
 │   ├── 404.html                # 容错页（自包含，根路径运行时推导）
 │   ├── .nojekyll
 │   └── assets/
 │       ├── css/site.css
 │       ├── js/app.js
-│       ├── data/syllabus.json   # 生成物
-│       ├── data/meta.json       # 生成物
+│       ├── js/references.js
+│       ├── data/syllabus.json          # 生成物（纯数据，字节稳定）
+│       ├── data/meta.json              # 生成物（含生成时间与源 commit）
+│       ├── data/references.json        # 生成物（纯数据，字节稳定）
+│       ├── data/references-meta.json   # 生成物（含生成时间与源 commit）
 │       └── favicon.svg
 └── README.md
 ```
 
 ## 重建数据层
 
-数据层由 Wiki 克隆生成。先取得大纲，再抽取：
+数据层由 Wiki 克隆生成。先取得大纲，再分别抽取两页所需数据：
 
 ```bash
 git clone https://github.com/acaGPT/Jurisprudence.wiki.git
@@ -60,13 +76,21 @@ python3 tools/extract-syllabus.py \
   --wiki Jurisprudence.wiki \
   --out site/assets/data \
   --auto
+
+python3 tools/extract-references.py \
+  --wiki Jurisprudence.wiki \
+  --out site/assets/data \
+  --auto
 ```
 
-输出 `syllabus.json`（单元、章节、文献计数、课前概览链接）与 `meta.json`
-（生成时间、源 commit、汇总统计）。控制的输出样例：
+课程地图输出 `syllabus.json`（单元、章节、文献计数、课前概览链接）与 `meta.json`；
+文献库输出 `references.json`（逐条作者、年份、题名、获取渠道）与
+`references-meta.json`。`*-meta.json` 含生成时间与源 commit；两个数据文件为纯数据、
+不含时间戳，字节比较稳定，CI 的发版判定正建立于此。控制的输出样例：
 
 ```
-单元 9 · 章节 47 · 经典文献 235 · 延伸阅读 132 · 已有课前概览 10
+单元 9 · 章节 47 · 经典文献 235 · 延伸阅读 128 · 已有课前概览 10
+文献 363 · 经典 235 · 延伸 128 · 全文直读 294 · 需定位或订阅 69 · 解析失败 0
 ```
 
 `meta.json` 里的 `source_commit` 是数据层的溯源凭据——抽取时写入的 Wiki commit，
@@ -121,7 +145,7 @@ python3 tools/check-sync.py --offline # 只比本地，跳过联网
 python3 ~/.workbuddy/skills/gh-pages-maker/scripts/new_pages_site.py \
   --name JurisprudenceAtlas \
   --source site \
-  --description "《法理学》课程地图：九单元四十七章的可检索索引，直达课程 Wiki" \
+  --description "《法理学》课程地图与文献库：四十七章与全部阅读文献的可检索索引" \
   --org acaGPT --copyright iLINGBIN --branch gh-pages --auto
 ```
 
@@ -156,12 +180,20 @@ python3 -m http.server 8899 --directory site
 - `PVI.1.b. Global Debates on Legal Formalism vs Legal Realism` 此前只挂在大纲
   PVI.1.a 的课前概览小节里、且未进 Wiki 首页，已于 v0.1.1 在 Wiki 侧补登本章的
   中英题名、把概览链接归位，并补齐首页导航。
+- **延伸阅读统计修正（v0.2.0）**：此前「延伸阅读 132」混入了 4 条课程政策条目
+  （学术诚信、出勤、迟交、引注——它们位于大纲末尾的 `## 7. 课程政策` 下，被算进
+  最后一章的延伸阅读），修正后为 **128**。抽取器的块边界现以顶层 `## ` 标题为界。
+- 文献条目的作者、年份、题名由正则从大纲原文解析，支持英文「作者 (年份)」、
+  年份区间（如 1739–40）与中文「作者（年份）《书名》」三种形态；解析不了的条目
+  照录原文并标注，当前 363 条全部解析成功。
+- 延伸阅读中的作者头像在 Wiki 里走相对路径，抽取时已改写为
+  `raw.githubusercontent.com/wiki/...` 绝对地址，否则站点上全部 404。
 - 同步工作流只在 `master` 分支上取大纲。Wiki 的 `Course-Syllabus.md` 改动若先落在
   特性分支，要等合并进 `master` 才会被站点取到；本地想提前验证，可把该分支克隆下来
   用 `--wiki` 指向它。
 - `meta.json` 每次抽取都会写入新的 `generated_at`，即使内容未变。因此判定「是否需要
-  同步」以 `source_commit` 为准，判定「是否值得发版」以 `syllabus.json` 的字节差异为准，
-  两者不要混用。
+  同步」以 `source_commit` 为准，判定「是否值得发版」以 `syllabus.json` 与
+  `references.json` 的字节差异为准，两者不要混用。
 - 自动发版路径（递增版本号 + `gh release create`）**尚未在真实环境跑过**：截至 v0.1.2，
   Wiki 的历次改动只影响溯源信息、未改动 `syllabus.json`，该分支一直被条件跳过。
   首次大纲内容真正变化时会首次执行，届时留意 Actions 日志。
