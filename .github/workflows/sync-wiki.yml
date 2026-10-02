@@ -55,17 +55,26 @@ jobs:
         run: |
           echo "wiki_sha=$(git -C wiki rev-parse --short HEAD)" >> "$GITHUB_ENV"
           python3 tools/extract-syllabus.py --wiki wiki --out /tmp/data --auto
-          # 源 commit 变了不等于大纲内容变了：改动可能落在首页等非大纲页面。
-          # 只按 syllabus.json 的字节差异区分「内容更新」与「仅溯源信息更新」，
+          python3 tools/extract-references.py --wiki wiki --out /tmp/data --auto
+          # 源 commit 变了不等于内容变了：改动可能落在首页等非数据页面。
+          # 按 syllabus.json 与 references.json 的字节差异区分「内容更新」与
+          # 「仅溯源信息更新」（两者都是纯数据、不含时间戳，字节比较可靠；
+          # 时间戳在 meta.json / references-meta.json 里，不参与判定），
           # 否则每次同步都会白耗一个版本号与一个 Release。
-          if diff -q /tmp/data/syllabus.json "$PUBLISH_DIR/assets/data/syllabus.json" >/dev/null; then
-            echo "content_changed=false" >> "$GITHUB_OUTPUT"
-            echo "大纲数据层无实质变化，本次仅同步溯源信息"
-          else
-            echo "content_changed=true" >> "$GITHUB_OUTPUT"
-            echo "大纲数据层有实质变化"
+          changed=false
+          for f in syllabus.json references.json; do
+            if ! diff -q "/tmp/data/$f" "$PUBLISH_DIR/assets/data/$f" >/dev/null; then
+              changed=true
+              echo "内容有变化：$f"
+            fi
+          done
+          echo "content_changed=$changed" >> "$GITHUB_OUTPUT"
+          if [ "$changed" = "false" ]; then
+            echo "数据层无实质变化，本次仅同步溯源信息"
           fi
-          cp /tmp/data/syllabus.json /tmp/data/meta.json "$PUBLISH_DIR/assets/data/"
+          cp /tmp/data/syllabus.json /tmp/data/meta.json \
+             /tmp/data/references.json /tmp/data/references-meta.json \
+             "$PUBLISH_DIR/assets/data/"
 
       - name: 推送 gh-pages
         if: steps.check.outputs.verdict == '不同步'

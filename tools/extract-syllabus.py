@@ -116,6 +116,21 @@ def next_chapter_start(
     return fallback
 
 
+def top_level_boundaries(lines: list[str]) -> list[int]:
+    """收集顶层 ## 标题行号——章节块的终点不得越过它们。
+
+    最后一章（PIX.4）之后还有「课程政策」等小节，其列表条目不是文献，
+    不截断就会被计进该章的延伸阅读。
+    """
+    return [i for i, line in enumerate(lines) if line.startswith("## ")]
+
+
+def clamp_end(end: int, after: int, boundaries: list[int]) -> int:
+    """把候选块终点收敛到下一个顶层标题之前（若存在）。"""
+    later = [i for i in boundaries if i > after]
+    return min(end, later[0]) if later else end
+
+
 def strip_code(title: str, code: str) -> str:
     """剥去标题开头的章号前缀——章号由卡片独立徽章呈现，标题只留题名。"""
     prefix = f"{code}."
@@ -173,6 +188,7 @@ def extract(wiki_dir: Path) -> tuple[dict, dict]:
             unit_marks.append(unit)
 
     headings = collect_headings(lines)
+    boundaries = top_level_boundaries(lines)
 
     chapters = []
     cursor = 0
@@ -196,6 +212,7 @@ def extract(wiki_dir: Path) -> tuple[dict, dict]:
         else:
             cursor += 1
 
+        end = clamp_end(end, index, boundaries)
         block = lines[index:end]
         unit = next((u for u in reversed(unit_marks) if u["start"] < index), None)
 
