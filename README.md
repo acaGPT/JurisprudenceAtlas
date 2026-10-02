@@ -4,7 +4,7 @@
 
 - **站点地址**：<https://acagpt.github.io/JurisprudenceAtlas/>
 - **数据来源**：<https://github.com/acaGPT/Jurisprudence.wiki>
-- **当前版本**：v0.1.0
+- **当前版本**：v0.1.1
 
 ## 这个站点做什么
 
@@ -62,7 +62,7 @@ python3 tools/extract-syllabus.py \
 （生成时间、源 commit、汇总统计）。控制的输出样例：
 
 ```
-单元 9 · 章节 46 · 经典文献 235 · 延伸阅读 132 · 已有课前概览 9
+单元 9 · 章节 47 · 经典文献 235 · 延伸阅读 132 · 已有课前概览 10
 ```
 
 Wiki 更新后重跑该命令即可，站点无需改动。
@@ -75,7 +75,7 @@ Wiki 更新后重跑该命令即可，站点无需改动。
 python3 ~/.workbuddy/skills/gh-pages-maker/scripts/new_pages_site.py \
   --name JurisprudenceAtlas \
   --source site \
-  --description "《法理学》课程地图：九单元四十六章的可检索索引，直达课程 Wiki" \
+  --description "《法理学》课程地图：九单元四十七章的可检索索引，直达课程 Wiki" \
   --org acaGPT --copyright iLINGBIN --branch gh-pages --auto
 ```
 
@@ -95,9 +95,13 @@ python3 -m http.server 8899 --directory site
 ## 已知事项
 
 - 大纲中的章节标题带章号前缀，抽取时已剥离，章号由卡片徽章单独呈现。
-- 页面 `PVI.1.b. Global Debates on Legal Formalism vs Legal Realism` 存在于课程 Wiki，
-  但既未列入大纲、也未列入 Wiki 首页（侧栏有）；本站因此只呈现大纲内的 46 章。
-  这是 Wiki 侧的收录不一致，需在 Wiki 修正后再重新生成数据层。
+- 大纲中的章节按「中文题名 + 英文题名」两行成对书写，抽取器据此配对合并。
+  两章题名若紧邻（PVI.1.a 与 PVI.1.b），块终点须越过本章两行再取下一个异章
+  标题，否则会把文献与课前概览小节整段丢给下一章——改动大纲结构后建议重跑
+  抽取器，核对各章 `refs_count` 与 `preclass_list` 是否归位。
+- `PVI.1.b. Global Debates on Legal Formalism vs Legal Realism` 此前只挂在大纲
+  PVI.1.a 的课前概览小节里、且未进 Wiki 首页，已于 v0.1.1 在 Wiki 侧补登本章的
+  中英题名、把概览链接归位，并补齐首页导航。
 
 ## 版权
 

@@ -3,7 +3,7 @@
 
 用途
     解析 Wiki 克隆目录中的 Course-Syllabus.md，把它从「一篇长文」还原为
-    「9 个单元 / 46 章」的结构化数据，输出站点使用的 JSON。
+    「9 个单元 / 47 章」的结构化数据，输出站点使用的 JSON。
     源仓库更新后重跑本脚本即可重新生成，站点不维护第二份内容。
 
 用法
@@ -97,6 +97,25 @@ def collect_headings(lines: list[str]) -> list[tuple[int, re.Match]]:
     return found
 
 
+def code_of(entry: tuple[int, re.Match]) -> str:
+    """取标题命中里的章号。"""
+    return RE_CODE.match(entry[1].group(1).strip()).group(1)
+
+
+def next_chapter_start(
+    headings: list[tuple[int, re.Match]], start: int, code: str, fallback: int
+) -> int:
+    """中英两行已配对合并时，块须越过本章两行再找下一个章号不同的标题行作终点。
+
+    相邻章节（PVI.1.a 紧接 PVI.1.b）使得单纯的「后一个标题行」落进下一章的
+    题名行，其间的经典文献、延伸阅读与课前概览小节会被整段丢弃。
+    """
+    for probe in range(start, len(headings)):
+        if code_of(headings[probe]) != code:
+            return headings[probe][0]
+    return fallback
+
+
 def strip_code(title: str, code: str) -> str:
     """剥去标题开头的章号前缀——章号由卡片独立徽章呈现，标题只留题名。"""
     prefix = f"{code}."
@@ -104,9 +123,14 @@ def strip_code(title: str, code: str) -> str:
 
 
 def parse_block(block: list[str]) -> dict:
-    """从单个章节的文本块中统计文献条目数并抽取课前概览链接。"""
+    """从单个章节的文本块中统计文献条目数并抽取课前概览链接。
+
+    课前概览小节内含多条链接时须全部收下（例如并列的两章共用该小节），
+    只取首条会吞掉后列的章节；`preclass` 仍是首条，供前端判定有无概览，
+    `preclass_list` 保留全部。
+    """
     counts = {"refs": 0, "further": 0}
-    preclass = None
+    preclass_list = []
     current = None
 
     for line in block:
@@ -121,13 +145,15 @@ def parse_block(block: list[str]) -> dict:
             continue
         if current == "preclass":
             link = RE_MD_LINK.search(line)
-            if link and not preclass:
-                preclass = {"title": link.group(1).strip(), "url": link.group(2).strip()}
+            if link:
+                item = {"title": link.group(1).strip(), "url": link.group(2).strip()}
+                preclass_list.append(item)
 
     return {
         "refs_count": counts["refs"],
         "further_count": counts["further"],
-        "preclass": preclass,
+        "preclass": preclass_list[0] if preclass_list else None,
+        "preclass_list": preclass_list,
     }
 
 
@@ -163,7 +189,7 @@ def extract(wiki_dir: Path) -> tuple[dict, dict]:
             pair_code = RE_CODE.match(pair_match.group(1).strip()).group(1)
             if pair_code == code:
                 en_title, en_desc = pair_match.group(1).strip(), pair_match.group(2).strip()
-                end = headings[cursor + 2][0] if cursor + 2 < len(headings) else len(lines)
+                end = next_chapter_start(headings, cursor + 2, code, len(lines))
                 cursor += 2
             else:
                 cursor += 1
@@ -215,7 +241,7 @@ def extract(wiki_dir: Path) -> tuple[dict, dict]:
             "chapters": len(chapters),
             "refs": sum(c["refs_count"] for c in chapters),
             "further": sum(c["further_count"] for c in chapters),
-            "preclass": sum(1 for c in chapters if c["preclass"]),
+            "preclass": sum(len(c["preclass_list"]) for c in chapters),
         },
     }
     return data, meta

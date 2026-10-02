@@ -40,7 +40,7 @@
    "num": 6,
    "title_zh": "现实主义与社会学进路",
    "title_en": "Part VI — Realism and Sociological Approaches",
-   "chapters": 4
+   "chapters": 5
   },
   {
    "num": 7,
@@ -72,7 +72,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 8,
    "further_count": 4,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PI.2",
@@ -87,7 +88,13 @@
    "preclass": {
     "title": "PI.2. 什么是法理学（What is Jurisprudence?）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PI.2.-What-is-Jurisprudence"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PI.2. 什么是法理学（What is Jurisprudence?）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PI.2.-What-is-Jurisprudence"
+    }
+   ]
   },
   {
    "code": "PI.3",
@@ -99,7 +106,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 2,
    "further_count": 0,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PI.4",
@@ -111,7 +119,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 1,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PI.5",
@@ -123,7 +132,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PI.6",
@@ -135,7 +145,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PII.1",
@@ -147,7 +158,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 7,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PII.2",
@@ -159,7 +171,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 2,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PII.3",
@@ -174,7 +187,13 @@
    "preclass": {
     "title": "PII.3. 古典自然法（Classical Natural Law）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PII.3.-Classical-Natural-Law"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PII.3. 古典自然法（Classical Natural Law）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PII.3.-Classical-Natural-Law"
+    }
+   ]
   },
   {
    "code": "PII.4",
@@ -189,7 +208,13 @@
    "preclass": {
     "title": "PII.4. 近代自然法与社会契约论（Modern Natural Law and Social Contract Theory）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PII.4.-Modern-Natural-Law-and-Social-Contract-Theory"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PII.4. 近代自然法与社会契约论（Modern Natural Law and Social Contract Theory）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PII.4.-Modern-Natural-Law-and-Social-Contract-Theory"
+    }
+   ]
   },
   {
    "code": "PII.5",
@@ -201,7 +226,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIII.1",
@@ -213,7 +239,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 3,
    "further_count": 0,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIII.2",
@@ -225,7 +252,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 1,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIII.3",
@@ -240,7 +268,13 @@
    "preclass": {
     "title": "PIII.3. 菲尼斯与新托马斯主义（Finnis and Neo-Thomism）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIII.3.-Finnis-and-Neo-Thomism"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PIII.3. 菲尼斯与新托马斯主义（Finnis and Neo-Thomism）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIII.3.-Finnis-and-Neo-Thomism"
+    }
+   ]
   },
   {
    "code": "PIV.1",
@@ -252,7 +286,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 2,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIV.2",
@@ -267,7 +302,13 @@
    "preclass": {
     "title": "PIV.2. 古典实证主义（Classical Positivism）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.2.-Classical-Positivism"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PIV.2. 古典实证主义（Classical Positivism）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.2.-Classical-Positivism"
+    }
+   ]
   },
   {
    "code": "PIV.3",
@@ -282,7 +323,13 @@
    "preclass": {
     "title": "PIV.3. 凯尔森与纯粹法学（Kelsen and the Pure Theory of Law）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.3.-Kelsen-and-the-Pure-Theory-of-Law"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PIV.3. 凯尔森与纯粹法学（Kelsen and the Pure Theory of Law）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.3.-Kelsen-and-the-Pure-Theory-of-Law"
+    }
+   ]
   },
   {
    "code": "PIV.4",
@@ -294,7 +341,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 5,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIV.5",
@@ -309,7 +357,13 @@
    "preclass": {
     "title": "PIV.5. 哈特与《法律的概念》（Hart and *The Concept of Law*）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.5.-Hart-and-The-Concept-of-Law"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PIV.5. 哈特与《法律的概念》（Hart and *The Concept of Law*）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.5.-Hart-and-The-Concept-of-Law"
+    }
+   ]
   },
   {
    "code": "PIV.6",
@@ -324,7 +378,13 @@
    "preclass": {
     "title": "PIV.6. 哈特之后的实证主义（Post-Hart Positivism）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.6.-Post-Hart-Positivism"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PIV.6. 哈特之后的实证主义（Post-Hart Positivism）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PIV.6.-Post-Hart-Positivism"
+    }
+   ]
   },
   {
    "code": "PIV.7",
@@ -336,7 +396,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 2,
    "further_count": 0,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PV.1",
@@ -348,7 +409,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PV.2",
@@ -360,7 +422,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PV.3",
@@ -372,7 +435,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVI.1.a",
@@ -387,7 +451,34 @@
    "preclass": {
     "title": "PVI.1.a. 法律形式主义对法律现实主义（Legal Formalism vs Legal Realism）",
     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PVI.1.a.-Legal-Formalism-vs-Legal-Realism"
-   }
+   },
+   "preclass_list": [
+    {
+     "title": "PVI.1.a. 法律形式主义对法律现实主义（Legal Formalism vs Legal Realism）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PVI.1.a.-Legal-Formalism-vs-Legal-Realism"
+    }
+   ]
+  },
+  {
+   "code": "PVI.1.b",
+   "unit": 6,
+   "title_zh": "法律形式主义与法律现实主义的全球论战",
+   "title_en": "Global Debates on Legal Formalism vs Legal Realism",
+   "desc_zh": "形式主义与现实主义之争跨出美国一国的场域：柯克对詹姆斯一世、布莱克斯通的发现说、法国法典化与蒂堡对萨维尼，依次把解释权威安放在法官、立法者与法律科学的不同位置（权威之争）；概念法学、兰代尔对霍姆斯与庞德、耶林的转向、热尼的自由科学研究与利益法学次第登场，最后由卢埃林与弗兰克的现实主义高潮收束（方法之争）；凯尔森对施米特、哈特对富勒、现代法教义学的存续、哈特对德沃金，以及格雷与肖尔的重估，逐次追问解释者能走多远（约束之争）；末节收于四方对照式的全球比较与中文语境的译介。",
+   "desc_en": "The same dispute conducted beyond the American case: Coke against James I, Blackstone's discovery thesis, French codification and Thibault against Savigny each settle interpretive authority in a different place — the courts, the legislator, or legal science; conceptual jurisprudence, Langdell against Holmes and Pound, Jhering's turn, Gény's free scientific research and the interest jurisprudence succeed one another, closing with the realist flourish of Llewellyn and Frank; Kelsen against Schmitt, Hart against Fuller, the survival of modern dogmatics, Hart against Dworkin, and the reassessments of Grey and Schauer each press the further question of how far an interpreter may go; the chapter closes with a four-fold comparative survey and the Chinese reception.",
+   "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
+   "refs_count": 0,
+   "further_count": 0,
+   "preclass": {
+    "title": "PVI.1.b. 法律形式主义与法律现实主义的全球论战（Global Debates on Legal Formalism vs Legal Realism）",
+    "url": "https://github.com/acaGPT/Jurisprudence/wiki/PVI.1.b.-Global-Debates-on-Legal-Formalism-vs-Legal-Realism"
+   },
+   "preclass_list": [
+    {
+     "title": "PVI.1.b. 法律形式主义与法律现实主义的全球论战（Global Debates on Legal Formalism vs Legal Realism）",
+     "url": "https://github.com/acaGPT/Jurisprudence/wiki/PVI.1.b.-Global-Debates-on-Legal-Formalism-vs-Legal-Realism"
+    }
+   ]
   },
   {
    "code": "PVI.2",
@@ -399,7 +490,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 7,
    "further_count": 5,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVI.3",
@@ -411,7 +503,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 4,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVI.4",
@@ -423,7 +516,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 7,
    "further_count": 5,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.1",
@@ -435,7 +529,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 2,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.2",
@@ -447,7 +542,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.3",
@@ -459,7 +555,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 4,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.4",
@@ -471,7 +568,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.5",
@@ -483,7 +581,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 5,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.6",
@@ -495,7 +594,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 2,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.7",
@@ -507,7 +607,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 0,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVII.8",
@@ -519,7 +620,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 4,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVIII.1",
@@ -531,7 +633,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVIII.2",
@@ -543,7 +646,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 7,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVIII.3",
@@ -555,7 +659,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 7,
    "further_count": 6,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVIII.4",
@@ -567,7 +672,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 6,
    "further_count": 4,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVIII.5",
@@ -579,7 +685,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 1,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PVIII.6",
@@ -591,7 +698,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 3,
    "further_count": 2,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIX.1",
@@ -603,7 +711,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 3,
    "further_count": 2,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIX.2",
@@ -615,7 +724,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 4,
    "further_count": 3,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIX.3",
@@ -627,7 +737,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 4,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   },
   {
    "code": "PIX.4",
@@ -639,7 +750,8 @@
    "syllabus_url": "https://github.com/acaGPT/Jurisprudence/wiki/Course-Syllabus",
    "refs_count": 5,
    "further_count": 7,
-   "preclass": null
+   "preclass": null,
+   "preclass_list": []
   }
  ]
 }
