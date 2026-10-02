@@ -126,7 +126,19 @@ jobs:
 
       - name: 复核线上同步
         if: steps.check.outputs.verdict == '不同步'
-        run: python3 tools/check-sync.py --wiki-dir wiki --site-url "$SITE_URL"
+        run: |
+          # Pages 部署有延迟：推送刚落地时，线上仍可能短暂读到旧数据层。
+          # 立即查一次必然报「落后」，故轮询重试而不是一次性下结论。
+          for attempt in 1 2 3 4 5 6; do
+            if python3 tools/check-sync.py --wiki-dir wiki --site-url "$SITE_URL"; then
+              echo "线上已与 Wiki 对齐"
+              exit 0
+            fi
+            echo "第 ${attempt} 次复核：线上尚未更新，30 秒后重试"
+            sleep 30
+          done
+          echo "线上在约 3 分钟内仍未更新，请手动核查 Pages 部署状态"
+          exit 1
 
       - name: 无需同步时说明
         if: steps.check.outputs.verdict != '不同步'
