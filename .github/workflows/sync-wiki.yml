@@ -79,7 +79,10 @@ jobs:
           git -c user.name="github-actions[bot]" \
               -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
               commit -m "同步课程 Wiki 数据层（源 ${wiki_sha}）"
-          git push origin gh-pages
+          # 装配用的是 detached worktree，本地并无 gh-pages 分支，
+          # 直接 `push origin gh-pages` 会报 src refspec does not match any，
+          # 必须把当前 HEAD 显式映射到远端分支。
+          git push origin HEAD:refs/heads/gh-pages
 
       - name: 等待 Pages 构建完成
         if: steps.check.outputs.verdict == '不同步'
