@@ -39,8 +39,11 @@ jobs:
       - name: 判定产物是否落后于 Wiki
         id: check
         run: |
+          # check-sync.py 以退出码表达判定结果（1 = 落后），而 Actions 的
+          # `bash -e` 会把任何非零退出当成步骤失败并立即中断。这里显式吞掉
+          # 退出码，判定改由 report.json 驱动后续步骤的条件。
           python3 tools/check-sync.py --offline --wiki-dir wiki \
-            --meta "$PUBLISH_DIR/assets/data/meta.json" --json > report.json
+            --meta "$PUBLISH_DIR/assets/data/meta.json" --json > report.json || true
           cat report.json
           echo "verdict=$(jq -r .verdict report.json)" >> "$GITHUB_OUTPUT"
           echo "wiki=$(jq -r .wiki_source report.json)" >> "$GITHUB_OUTPUT"
