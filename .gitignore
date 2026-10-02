@@ -1,6 +1,8 @@
 .build/
+.publish/
 .research/
 .workbuddy/
+report.json
 __pycache__/
 *.pyc
 .DS_Store

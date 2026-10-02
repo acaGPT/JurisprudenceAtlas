@@ -4,7 +4,7 @@
 
 - **站点地址**：<https://acagpt.github.io/JurisprudenceAtlas/>
 - **数据来源**：<https://github.com/acaGPT/Jurisprudence.wiki>
-- **当前版本**：v0.1.1
+- **当前版本**：v0.1.2
 
 ## 这个站点做什么
 
@@ -30,9 +30,13 @@
 
 ```
 .
+├── .github/workflows/
+│   └── sync-wiki.yml          # 每日轮询 Wiki，落后则抽取并直推 gh-pages
 ├── tools/
-│   └── extract-syllabus.py     # 从 Wiki 大纲抽取数据层
-├── site/                       # 站点源（发布到 gh-pages 分支）
+│   ├── extract-syllabus.py    # 从 Wiki 大纲抽取数据层
+│   ├── check-sync.py          # 三级比对：Wiki → 数据层 → 线上 Pages
+│   └── bump-version.py        # 递增 README 版本号，供自动发版取号
+├── site/                      # 站点源（发布到 gh-pages 分支）
 │   ├── index.html              # 课程地图
 │   ├── 404.html                # 容错页（自包含，根路径运行时推导）
 │   ├── .nojekyll
@@ -65,11 +69,53 @@ python3 tools/extract-syllabus.py \
 单元 9 · 章节 47 · 经典文献 235 · 延伸阅读 132 · 已有课前概览 10
 ```
 
-Wiki 更新后重跑该命令即可，站点无需改动。
+`meta.json` 里的 `source_commit` 是数据层的溯源凭据——抽取时写入的 Wiki commit，
+也是同步机制判定「站点是否落后」的基准。
+
+## 同步机制
+
+Wiki 大纲更新后，站点数据层由 GitHub Actions 自动跟上，无需人工介入。
+
+```
+Course-Syllabus.md ──抽取器──▶ syllabus.json / meta.json ──推送──▶ gh-pages ──▶ Pages
+```
+
+工作流 `.github/workflows/sync-wiki.yml` 每日北京时间 07:17 运行一次，也可手动触发。
+每一步都可独立失败而不影响其余步骤：
+
+| 步骤 | 行为 | 失败时 |
+|---|---|---|
+| 判定 | 比对 Wiki `master` 的 HEAD 与 `gh-pages` 上 `meta.json` 的 `source_commit` | 取不到基准即判定为「无法判定」，本轮不动任何东西 |
+| 抽取 | 重跑 `extract-syllabus.py`，产物写临时目录 | 抽取异常退出，`gh-pages` 不被触碰 |
+| 推送 | 只替换 `assets/data/` 两个 JSON，站点其余文件沿用分支现状 | 抽取结果与现状一致时不产生空提交 |
+| 构建 | 轮询 Pages API 至 `built`（10 分钟上限） | 超时只告警，不回滚已发布内容 |
+| 发版 | 仅在 `syllabus.json` **确有字节级变化**时递增版本号并建 Release | 无实质变化时只更新溯源信息，不占版本号 |
+
+判定与发版的分流是刻意设计：源 commit 变化可能来自首页或其他非大纲页面的改动，
+此时站点内容其实没变，不应白耗一个版本号。分流依据是 `syllabus.json` 的字节差异，
+而非 commit 本身。
+
+手动复查当前是否同步：
+
+```bash
+python3 tools/check-sync.py          # 三级比对，含线上 Pages
+python3 tools/check-sync.py --offline # 只比本地，跳过联网
+```
+
+```
+源 Wiki    ：6aa6999（远端 master）
+数据层     ：6aa6999｜数据层 已对齐（6aa6999）
+线上 Pages ：5e5b0ec｜线上 Pages 落后：站点 5e5b0ec，Wiki 6aa6999
+结论       ：不同步
+动作       ：先重跑 tools/extract-syllabus.py 更新数据层，再把站点重新发布到 gh-pages
+```
+
+退出码：`0` 对齐、`1` 落后、`2` 无法判定——可直接用于其他脚本或本地钩子。
 
 ## 发布
 
-站点为纯静态页，无构建步骤、无第三方依赖。
+站点为纯静态页，无构建步骤、无第三方依赖。**数据层不由这条链路发布**——它由上面的
+同步工作流维护；手工发布用于站点代码（HTML / CSS / JS）的改动。
 
 ```bash
 python3 ~/.workbuddy/skills/gh-pages-maker/scripts/new_pages_site.py \
@@ -78,6 +124,10 @@ python3 ~/.workbuddy/skills/gh-pages-maker/scripts/new_pages_site.py \
   --description "《法理学》课程地图：九单元四十七章的可检索索引，直达课程 Wiki" \
   --org acaGPT --copyright iLINGBIN --branch gh-pages --auto
 ```
+
+该脚本会重建 `gh-pages` 分支根目录并重新装配 `LICENSE`、站点 `README` 与 `404.html`。
+仓库已有同名分支，需加 `--skip-repo` 复用；清空 `.build` 目录若被安全删除保护拦住，
+改用 `git worktree add .build/wt origin/gh-pages` 装配后再推。
 
 本地预览：
 
@@ -89,8 +139,12 @@ python3 -m http.server 8899 --directory site
 
 | 分支 | 内容 |
 |---|---|
-| `main` | 站点源、抽取脚本、说明文档 |
+| `main` | 站点源、抽取与检查脚本、同步工作流、说明文档 |
 | `gh-pages` | 发布产物（站点源 + `LICENSE` + 站点 `README`），Pages 由此分支根目录发布 |
+
+两分支内容并不相同：`gh-pages` 不含 `tools/` 与本文件，站点 `README` 也与本文件不同。
+因此改站点代码、手动发版走 `gh-pages`，改脚本与文档走 `main`；同步工作流只往
+`gh-pages` 替换 `assets/data/` 两个 JSON，不触碰站点其余文件。
 
 ## 已知事项
 
@@ -102,6 +156,12 @@ python3 -m http.server 8899 --directory site
 - `PVI.1.b. Global Debates on Legal Formalism vs Legal Realism` 此前只挂在大纲
   PVI.1.a 的课前概览小节里、且未进 Wiki 首页，已于 v0.1.1 在 Wiki 侧补登本章的
   中英题名、把概览链接归位，并补齐首页导航。
+- 同步工作流只在 `master` 分支上取大纲。Wiki 的 `Course-Syllabus.md` 改动若先落在
+  特性分支，要等合并进 `master` 才会被站点取到；本地想提前验证，可把该分支克隆下来
+  用 `--wiki` 指向它。
+- `meta.json` 每次抽取都会写入新的 `generated_at`，即使内容未变。因此判定「是否需要
+  同步」以 `source_commit` 为准，判定「是否值得发版」以 `syllabus.json` 的字节差异为准，
+  两者不要混用。
 
 ## 版权
 

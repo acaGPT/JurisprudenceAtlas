@@ -1,0 +1,128 @@
+name: 课程 Wiki 同步到 Pages
+
+on:
+  schedule:
+    # 每日一次，UTC 23:17 对应北京时间次日 07:17；避开整点峰值
+    - cron: '17 23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PUBLISH_DIR: .publish
+  SITE_URL: https://acagpt.github.io/JurisprudenceAtlas/
+
+jobs:
+  sync:
+    name: 抽取并发布
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出站点仓库
+        uses: actions/checkout@v4
+
+      - name: 检出课程 Wiki
+        # Wiki 为公开仓库，匿名即可检出，无需额外凭据
+        uses: actions/checkout@v4
+        with:
+          repository: acaGPT/Jurisprudence.wiki
+          ref: master
+          path: wiki
+
+      - name: 检出 gh-pages 分支产物
+        # 发布只替换数据层，站点其余文件沿用分支现有内容，避免整站重建
+        run: |
+          git fetch origin gh-pages --depth=1
+          git worktree add --detach "$PUBLISH_DIR" FETCH_HEAD
+
+      - name: 判定产物是否落后于 Wiki
+        id: check
+        run: |
+          python3 tools/check-sync.py --offline --wiki-dir wiki \
+            --meta "$PUBLISH_DIR/assets/data/meta.json" --json > report.json
+          cat report.json
+          echo "verdict=$(jq -r .verdict report.json)" >> "$GITHUB_OUTPUT"
+          echo "wiki=$(jq -r .wiki_source report.json)" >> "$GITHUB_OUTPUT"
+          echo "stats=$(jq -r '.local_stats | "单元 \(.units) · 章节 \(.chapters) · 课前概览 \(.preclass)"' report.json)" >> "$GITHUB_OUTPUT"
+
+      - name: 重跑抽取器
+        id: extract
+        if: steps.check.outputs.verdict == '不同步'
+        run: |
+          echo "wiki_sha=$(git -C wiki rev-parse --short HEAD)" >> "$GITHUB_ENV"
+          python3 tools/extract-syllabus.py --wiki wiki --out /tmp/data --auto
+          # 源 commit 变了不等于大纲内容变了：改动可能落在首页等非大纲页面。
+          # 只按 syllabus.json 的字节差异区分「内容更新」与「仅溯源信息更新」，
+          # 否则每次同步都会白耗一个版本号与一个 Release。
+          if diff -q /tmp/data/syllabus.json "$PUBLISH_DIR/assets/data/syllabus.json" >/dev/null; then
+            echo "content_changed=false" >> "$GITHUB_OUTPUT"
+            echo "大纲数据层无实质变化，本次仅同步溯源信息"
+          else
+            echo "content_changed=true" >> "$GITHUB_OUTPUT"
+            echo "大纲数据层有实质变化"
+          fi
+          cp /tmp/data/syllabus.json /tmp/data/meta.json "$PUBLISH_DIR/assets/data/"
+
+      - name: 推送 gh-pages
+        if: steps.check.outputs.verdict == '不同步'
+        run: |
+          cd "$PUBLISH_DIR"
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "抽取结果与分支现有内容一致，跳过提交"
+            exit 0
+          fi
+          git add -A
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "同步课程 Wiki 数据层（源 ${wiki_sha}）"
+          git push origin gh-pages
+
+      - name: 等待 Pages 构建完成
+        if: steps.check.outputs.verdict == '不同步'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for _ in $(seq 1 30); do
+            status=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq .status)
+            echo "Pages 状态：$status"
+            if [ "$status" = "built" ]; then exit 0; fi
+            sleep 20
+          done
+          echo "Pages 在 10 分钟内未构建完成，仍按同步成功继续（构建可稍后完成）"
+
+      - name: 递增版本号
+        id: bump
+        if: steps.check.outputs.verdict == '不同步' && steps.extract.outputs.content_changed == 'true'
+        run: |
+          version=$(python3 tools/bump-version.py --dry-run)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          python3 tools/bump-version.py --readme README.md
+          git add README.md
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "递增项目版本至 ${version}"
+          git push origin HEAD:main
+
+      - name: 创建 Release
+        if: steps.check.outputs.verdict == '不同步' && steps.extract.outputs.content_changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.bump.outputs.version }}" \
+            --title "${{ steps.bump.outputs.version }} 课程数据同步" \
+            --notes "课程 Wiki 更新后站点数据层自动重新抽取并发布。
+
+            源 Wiki：acaGPT/Jurisprudence.wiki（${{ steps.check.outputs.wiki }}）
+            本次统计：${{ steps.check.outputs.stats }}
+
+            站点：<${SITE_URL}>"
+
+      - name: 复核线上同步
+        if: steps.check.outputs.verdict == '不同步'
+        run: python3 tools/check-sync.py --wiki-dir wiki --site-url "$SITE_URL"
+
+      - name: 无需同步时说明
+        if: steps.check.outputs.verdict != '不同步'
+        run: |
+          echo "本次无需同步（${{ steps.check.outputs.verdict }}），站点内容已是 Wiki 最新。"
