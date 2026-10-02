@@ -162,6 +162,11 @@ python3 -m http.server 8899 --directory site
 - `meta.json` 每次抽取都会写入新的 `generated_at`，即使内容未变。因此判定「是否需要
   同步」以 `source_commit` 为准，判定「是否值得发版」以 `syllabus.json` 的字节差异为准，
   两者不要混用。
+- 自动发版路径（递增版本号 + `gh release create`）**尚未在真实环境跑过**：截至 v0.1.2，
+  Wiki 的历次改动只影响溯源信息、未改动 `syllabus.json`，该分支一直被条件跳过。
+  首次大纲内容真正变化时会首次执行，届时留意 Actions 日志。
+- CI 在 UTC 环境运行，`meta.json` 的 `generated_at` 时区写作 `+0000`，与本地生成的
+  `+0800` 不同。这是环境差异而非错误，比对请以 `source_commit` 为准。
 
 ## 版权
 
