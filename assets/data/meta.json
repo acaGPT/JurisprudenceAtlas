@@ -1,13 +1,13 @@
 {
- "generated_at": "2026-10-16 01:26 +0000",
+ "generated_at": "2026-10-17 01:21 +0000",
  "source_repo": "https://github.com/acaGPT/Jurisprudence.wiki",
- "source_commit": "aba8234",
+ "source_commit": "029e825",
  "wiki_base": "https://github.com/acaGPT/Jurisprudence/wiki",
  "stats": {
   "units": 9,
   "chapters": 46,
   "refs": 235,
   "further": 128,
-  "preclass": 12
+  "preclass": 13
  }
 }
